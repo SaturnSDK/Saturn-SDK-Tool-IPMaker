@@ -1,0 +1,60 @@
+# Directories #
+Obj
+obj
+Bin
+bin
+Build
+build
+Lib
+lib
+Debug
+debug
+Release
+release
+Profile
+profile
+ipch
+Data
+gen
+Gen
+
+# Complied #
+*.obj
+*.o
+*.exe
+*.bin
+
+# Build #
+*.ncb
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.aps
+*.pch
+local.properties
+
+# Temporary Vim #
+*.swp
+*.swo
+*.swn
+*.vim
+
+# Temporary Blender files #
+*.blend*
+!*.blend
+
+# Diffing temporary files #
+*.orig
+
+# Documentation #
+*.~lock.*
+*.docstates
+
+# Git version header #
+GitVersion.hpp
+
+# LaTeX temporary files
+*.aux
+*.log
+*.toc
