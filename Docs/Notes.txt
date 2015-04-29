@@ -1,0 +1,22 @@
+The initial prototype will not have a GUI, console only.
+
+Things to set:
+Hardware identifier - Must be "SEGA SEGASATURN "
+Maker ID - [SEGA] "SEGA ENTERPRISES" [3rd Party] "SEGA TP T-XXXXXX"
+Product Number [SEGA] "GS-XXXXXXX" [3rd Party] "T-XXXXXXXX"
+Version - "v1.000" V followed by Major.Minor
+Release Date - <YYYY><MM><DD>
+Device Information - [CD 1 of 3] "CD-1/3  "
+Area - Combination of J/T/U/E Japan/Asia NTSC/North&South America/Europe PAL
+Peripherals - Combination of J/A/M/K/S/T Control Pad/Analogue Controller/Mouse/Keyboard/Steering Wheel/Multitap
+Title - 112 characters / Multiple titles: "TITLE1/TITLE2/TITLE3" / Different regions "U:GAME USA  J:GAME JPN  E:GAME PAL"
+Initial Program Size - Range: 0x1000 - 0x8000, long-word aligned
+Master CPU Stack Address - Defaults to 0x06001000
+Slave CPU Stack Address - Defaults to 0x06000D00
+1st Read Address - Range: 0x06002000+IP Size to 0x06100000)-4 | Default: 0x06010000
+1st Read Size - Ignored for CDs
+
+Would JSON be a good input format?
+
+IP header, insert Security code followed by Area code(s) and init
+

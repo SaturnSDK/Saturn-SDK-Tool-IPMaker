@@ -9,9 +9,9 @@ export OBJSDIR		= $(TOPDIR)/Obj/$(PLATFORM)/$(ARCH)/$(BITSIZE)/GCC/$(GCCVER)/$(B
 endif
 SOURCEDIR	= Source ../Common/Source
 
-PROJECT := ipmaker
+PROJECT := saturn-ipmaker
 TARGET := $(PROJECT)
-OUTFILE	=	$(TARGETDIR)/$(TARGET)_$(GCCVER)
+OUTFILE	=	$(TARGETDIR)/$(TARGET)
 
 PLATFORM		:= Linux
 BUILD_PLATFORM	:= LINUX
@@ -32,6 +32,7 @@ UNAME_MACHINE	= $(shell uname -m)
 
 ifeq ($(UNAME), Linux)
 	CPPFLAGS_EXT	= -ffriend-injection -std=c++0x
+	CFLAGS_EXT	=
 	SYSIPATH	= -I/usr/include/xorg
 	SYSLIBS		=
 	LINKFLAGS	=
@@ -57,15 +58,22 @@ endif
 endif
 endif
 
+CC = gcc
 CPP = g++
+
+CFLAGS		=	-c -m$(BITSIZE) -DSSSDK_BUILD_$(BUILD_DEF) \
+				-DSSSDK_PLATFORM_$(BUILD_PLATFORM) \
+				-DSSSDK_PLATFORM_$(BUILD_PLATFORM)_$(BUILD_ARCH) \
+				-DSSSDK_PLATFORM_$(BUILD_PLATFORM)_$(BUILD_ARCH)_$(BITSIZE) \
+				-DSSSDK_BITSIZE_$(BITSIZE) -DSSSDK_ARCH_$(BUILD_ARCH) \
+				-I$(TOPSRC)/${PLATFORM}/Headers -I$(TOPSRC)/Common/Headers
 
 CPPFLAGS	=	-c -m$(BITSIZE) -DSSSDK_BUILD_$(BUILD_DEF) \
 				-DSSSDK_PLATFORM_$(BUILD_PLATFORM) \
 				-DSSSDK_PLATFORM_$(BUILD_PLATFORM)_$(BUILD_ARCH) \
 				-DSSSDK_PLATFORM_$(BUILD_PLATFORM)_$(BUILD_ARCH)_$(BITSIZE) \
 				-DSSSDK_BITSIZE_$(BITSIZE) -DSSSDK_ARCH_$(BUILD_ARCH) \
-				-DSSSDK_WINDOWSYSTEM_X11 \
-				-I$(TOPSRC)/Linux/Headers -I$(TOPSRC)/Common/Headers
+				-I$(TOPSRC)/${PLATFORM}/Headers -I$(TOPSRC)/Common/Headers
 SYSIPATH	=
 INCPATH		=
 SYSLPATH	=	
@@ -79,6 +87,7 @@ debug:		BUILD_TYPE	= debug
 debug:		BUILD_DEF	= DEBUG
 debug:		TARGET := $(TARGET)D
 debug:		CPPFLAGS += -g -ggdb -Wall -D_DEBUG $(CPPFLAGS_EXT)
+debug:		CFLAGS += -g -ggdb -Wall -D_DEBUG $(CFLAGS_EXT)
 debug:		LIBS =  
 debug:		$(TARGET)
 
@@ -88,6 +97,7 @@ release:	BUILD_TYPE	= release
 release:	BUILD_DEF	= RELEASE
 release:	TARGET := $(TARGET)
 release:	CPPFLAGS += -O3 -s $(CPPFLAGS_EXT)
+release:	CFLAGS += -O3 -s $(CFLAGS_EXT)
 release:	LIBS = 
 release:	LINKFLAGS += -Wl,-S
 release:	$(TARGET)
@@ -98,6 +108,7 @@ profile:	BUILD_TYPE	= profile
 profile:	BUILD_DEF	= PROFILE
 profile:	TARGET := $(TARGET)P
 profile:	CPPFLAGS += -O3 -g -ggdb -Wall -D_DEBUG $(CPPFLAGS_EXT)
+profile:	CFLAGS += -O3 -g -ggdb -Wall -D_DEBUG $(CFLAGS_EXT)
 profile:	LIBS =
 profile:	$(TARGET)
 
@@ -118,9 +129,9 @@ TARGETDIR:
 OBJSDIR:
 	@mkdir -p $(OBJSDIR)
 
-CPPFILES	:= $(foreach dir,$(SOURCEDIR),$(notdir $(wildcard $(dir)/*.cpp)))
+CFILES	:= $(foreach dir,$(SOURCEDIR),$(notdir $(wildcard $(dir)/*.c)))
 export VPATH	:= $(foreach dir,$(SOURCEDIR),$(CURDIR)/$(dir))
-export OBJS		:= $(CPPFILES:.cpp=.o)
+export OBJS		:= $(CFILES:.c=.o)
 
 $(TARGET): OBJSDIR TARGETDIR VERSIONINFO
 	@/usr/bin/time -f "%E" -o $(OBJSDIR)/compiletime $(MAKE) \
@@ -144,7 +155,7 @@ $(TARGET): $(OBJS)
 	@printf "%s" "------------------------------------------------------------"
 	@printf "%s\n\n" "-------------------"
 	@printf "Creating: $(OUTFILE)... "
-	@$(CPP) -o $(OUTFILE) $(LINKFLAGS) -m$(BITSIZE) $(OBJS) $(SYSLPATH) \
+	@$(CC) -o $(OUTFILE) $(LINKFLAGS) -m$(BITSIZE) $(OBJS) $(SYSLPATH) \
 	$(LIBPATH) $(LIBS) $(SYSLIBS) 2> lmsgs;\
 	RETVAL=$$?;\
 	if env | grep -q ^TERM=; then\
@@ -165,9 +176,9 @@ $(TARGET): $(OBJS)
 		exit 1;\
 	fi
 
-%.o: %.cpp
+%.o: %.c
 	@printf "Compiling: $<... "
-	@$(CPP) -MMD -MP -MF $*.d $(CPPFLAGS) $(SYSIPATH) $(INCPATH) \
+	@$(CC) -MMD -MP -MF $*.d $(CFLAGS) $(SYSIPATH) $(INCPATH) \
 	$< -o $@ 2> $*.cmsgs;\
 	RETVAL=$$?;\
 	if env | grep -q ^TERM=; then\
