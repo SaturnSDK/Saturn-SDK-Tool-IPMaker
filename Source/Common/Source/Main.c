@@ -1,26 +1,50 @@
-#include <stdio.h>
-#include <SystemID.h>
+/* Main.c */
+/* GNU General Public License v3.0 */
 
-int main( int p_Argc, char **p_ppArgv )
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "SystemID.h"
+
+/* 2 defines */
+/* 3 external declarations */
+/* 4 typedefs */
+/* 5 global variable declarations */
+/* 6 function prototypes */
+
+
+
+int main( int argc, char *argv[] )
 {
-	FILE *pSystemIDFile;
+	FILE *pSystemIDFile = NULL;
 	struct SYSTEM_ID SystemID;
 
 	printf( "SEGA Saturn SDK | IP Maker\n" );
 
+    // Set Default attributes
 	IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
+
+
 
 	pSystemIDFile = fopen( "SystemID", "w" );
 
-	fwrite( &SystemID, sizeof( SystemID ), 1, pSystemIDFile );
+    if (pSystemIDFile != NULL) {
 
-	fclose( pSystemIDFile );
+        fwrite(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
 
-	printf( "System ID Information\n" );
-	printf( "---------------------\n" );
+        fclose(pSystemIDFile);
 
-	IPT_PrintSystemID( SystemID );
+        printf("System ID Information\n");
+        printf("---------------------\n");
 
-	return 0;
+        IPT_PrintSystemID(&SystemID);
+
+    } else {
+        printf("Cannot open file!\n");
+
+        exit(EXIT_FAILURE);
+    }
+	return EXIT_SUCCESS;
 }
 

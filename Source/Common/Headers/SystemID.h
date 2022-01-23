@@ -79,7 +79,7 @@ int IPT_SetSlaveStackAddress( struct SYSTEM_ID p_SystemID,
 int IPT_SetFirstReadAddress( struct SYSTEM_ID *p_pSystemID,
 	int p_FirstReadAddress );
 
-void IPT_PrintSystemID( struct SYSTEM_ID p_SystemID );
+void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID );
 
 #endif // __IPMAKER_SYSTEMID_H__
 

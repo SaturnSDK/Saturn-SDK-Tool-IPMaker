@@ -26,17 +26,18 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 	memset( p_pSystemID->Title, ' ', sizeof( p_pSystemID->Title ) );
 	strncpy( p_pSystemID->Title, "GAME", 4 );
 	memset( p_pSystemID->Reserved1, ' ', sizeof( p_pSystemID->Reserved1 ) );
+
 	p_pSystemID->IPSize = 0x00001800;
 	p_pSystemID->MasterStack= 0;
 	p_pSystemID->SlaveStack = 0;
-	p_pSystemID->FirstReadAddress = 0x06010000;
+	p_pSystemID->FirstReadAddress = 0x06004000;
 	p_pSystemID->FirstReadSize = 0;
 	memset( p_pSystemID->Reserved3, ' ', sizeof( p_pSystemID->Reserved3 ) );
 
 	return 0;
 }
 
-void IPT_PrintSystemID( struct SYSTEM_ID p_SystemID )
+void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 {
 	char Area;
 	char Peripheral;
@@ -44,19 +45,19 @@ void IPT_PrintSystemID( struct SYSTEM_ID p_SystemID )
 	int MasterStack;
 	int SlaveStack;
 
-	printf( "Hardware ID:                  %.16s\n", p_SystemID.HardwareID );
-	printf( "Maker ID:                     %.16s\n", p_SystemID.MakerID );
+	printf( "Hardware ID:                  %.16s\n", p_SystemID->HardwareID );
+	printf( "Maker ID:                     %.16s\n", p_SystemID->MakerID );
 	printf( "Product number:               %.10s\n",
-		p_SystemID.ProductNumber ); 
-	printf( "Version:                      %.6s\n", p_SystemID.VersionNumber );
+		p_SystemID->ProductNumber );
+	printf( "Version:                      %.6s\n", p_SystemID->VersionNumber );
 	printf( "Release date:                 %.4s/%.2s/%.2s\n",
-		p_SystemID.ReleaseDate, p_SystemID.ReleaseDate + 4,
-		p_SystemID.ReleaseDate + 6 );
+		p_SystemID->ReleaseDate, p_SystemID->ReleaseDate + 4,
+		p_SystemID->ReleaseDate + 6 );
 	printf( "Device information:           %.8s\n",
-		p_SystemID.DeviceInformation );
+		p_SystemID->DeviceInformation );
 	printf( "Compatible areas:             " );
 
-	Area = *( p_SystemID.CompatibleAreaSymbols );
+	Area = *( p_SystemID->CompatibleAreaSymbols );
 	Counter = 0;
 	while( Area != ' ' && Counter < 10 )
 	{
@@ -114,14 +115,14 @@ void IPT_PrintSystemID( struct SYSTEM_ID p_SystemID )
 			}
 		}
 		++Counter;
-		Area = ( *( p_SystemID.CompatibleAreaSymbols + Counter ) );
+		Area = ( *( p_SystemID->CompatibleAreaSymbols + Counter ) );
 	}
 	printf( "\n" );
 
 	printf( "Peripherals:                  " );
 
 	Counter = 0;
-	Peripheral = *( p_SystemID.Peripherals );
+	Peripheral = *( p_SystemID->Peripherals );
 
 	while( Peripheral != ' ' && Counter < 10 )
 	{
@@ -170,39 +171,39 @@ void IPT_PrintSystemID( struct SYSTEM_ID p_SystemID )
 		}
 
 		++Counter;
-		Peripheral = ( *( p_SystemID.Peripherals + Counter ) );
+		Peripheral = ( *( p_SystemID->Peripherals + Counter ) );
 	}
 	printf( "\n" );
 
-	printf( "Title:                        %.122s\n", p_SystemID.Title );
-	printf( "IP Size:                      0x%08X\n", p_SystemID.IPSize );
+	printf( "Title:                        %.122s\n", p_SystemID->Title );
+	printf( "IP Size:                      0x%08X\n", p_SystemID->IPSize );
 
-	if( p_SystemID.MasterStack == 0 )
+	if( p_SystemID->MasterStack == 0 )
 	{
 		MasterStack = 0x06001000;
 	}
 	else
 	{
-		MasterStack = p_SystemID.MasterStack;
+		MasterStack = p_SystemID->MasterStack;
 	}
 
 	printf( "Master stack pointer address: 0x%08X\n", MasterStack );
 
-	if( p_SystemID.SlaveStack == 0 )
+	if( p_SystemID->SlaveStack == 0 )
 	{
 		SlaveStack = 0x06000D00;
 	}
 	else
 	{
-		SlaveStack = p_SystemID.SlaveStack;
+		SlaveStack = p_SystemID->SlaveStack;
 	}
 
 	printf( "Slave stack pointer address:  0x%08X\n", SlaveStack );
 
 	printf( "1st read address:             0x%08X\n",
-		p_SystemID.FirstReadAddress );
+		p_SystemID->FirstReadAddress );
 
 	printf( "1st read size:                0x%08X\n",
-		p_SystemID.FirstReadSize );
+		p_SystemID->FirstReadSize );
 }
 
