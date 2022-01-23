@@ -46,24 +46,36 @@ typedef enum
 }MAKER_ID;
 
 int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID );
+
 int IPT_SetMakerID( struct SYSTEM_ID *p_pSystemID, char *p_pMakerID );
+
 int IPT_SetProductNumber( struct SYSTEM_ID *p_pSystemID,
 	char *p_pProductNumber );
+
 int IPT_SetVersionNumber( struct SYSTEM_ID *p_pSystemID, int p_Major,
 	int p_Minor );
+
 int IPT_SetReleaseDate( struct SYSTEM_ID *p_pSystemID, int p_Year, int p_Month,
 	int p_Date );
+
 int IPT_SetDeviceInformation( struct SYSTEM_ID *p_pSystemID, int p_CDNumber,
 	int p_CDCount );
+
 int IPT_SetCompatibleAreas( struct SYSTEM_ID *p_pSystemID, int p_Areas );
+
 int IPT_SetCompatiblePeripherals( struct SYSTEM_ID *p_pSystemID,
 	int p_Peripherals );
+
 int IPT_SetTitle( struct SYSTEM_ID *p_pSystemID, char *p_pTitle );
+
 int IPT_SetIPSize( struct SYSTEM_ID *p_pSystemID, int p_Size );
+
 int IPT_SetMasterStackAddress( struct SYSTEM_ID *p_pSystemID,
 	int p_StackAddress );
+
 int IPT_SetSlaveStackAddress( struct SYSTEM_ID p_SystemID,
 	int p_StackAddress );
+
 int IPT_SetFirstReadAddress( struct SYSTEM_ID *p_pSystemID,
 	int p_FirstReadAddress );
 
