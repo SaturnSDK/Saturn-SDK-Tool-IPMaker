@@ -32,9 +32,6 @@ int main( int argc, char *argv[] )
 
 	printf( "SEGA Saturn SDK | IP Maker\n" );
 
-    // Set Default attributes
-	IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
-
     // Read Arguments from cli
     while((opt = getopt(argc, argv, ":i:o:vh")) != -1)
     {
@@ -78,7 +75,7 @@ int main( int argc, char *argv[] )
             fclose(pSystemIDFile);
 
         } else {
-            fprintf (stderr,"Cannot open file!\n");
+            fprintf (stderr,"Cannot open file : %s\n", sInputFile);
             exit(EXIT_FAILURE);
         }
     }
@@ -87,16 +84,23 @@ int main( int argc, char *argv[] )
         pSystemIDFile = fopen( sOutputFile, "w" );
 
         if (pSystemIDFile != NULL) {
+            // Set Default attributes
+            IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
+
             fwrite(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
             fclose(pSystemIDFile);
 
         } else {
-            fprintf (stderr,"Cannot open file!\n");
+            fprintf (stderr,"Cannot open file : %s\n", sOutputFile);
             exit(EXIT_FAILURE);
         }
     }
 
-
+    if (!sInputFile && !sOutputFile) {
+        fprintf (stderr,"Not enough arguments\n");
+        help();
+        exit(EXIT_FAILURE);
+    }
 
 
 
