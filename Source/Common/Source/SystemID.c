@@ -80,7 +80,7 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 			}
 			case 'U':
 			{
-				printf( "Norht America" );
+				printf( "North America" );
 				break;
 			}
 			case 'B':
