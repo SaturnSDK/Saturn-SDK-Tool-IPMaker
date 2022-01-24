@@ -58,3 +58,4 @@ GitVersion.hpp
 *.aux
 *.log
 *.toc
+/Tests/
