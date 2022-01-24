@@ -16,6 +16,6 @@ add_executable( IPMaker ${SOURCES} )
 target_include_directories(IPMaker PUBLIC
         Source/Common/Headers/)
 
-target_compile_options(IPMaker PUBLIC -g -O2 -Wall)
+target_compile_options(IPMaker PUBLIC -g -Wall)
 
 install(TARGETS IPMaker DESTINATION ${IPMAKER_DESTINATION}/ )
