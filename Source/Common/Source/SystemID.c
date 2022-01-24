@@ -165,7 +165,7 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 			}
 			default:
 			{
-				printf( "UNKNOWN" );
+				printf( "UNKNOWN : %c", Peripheral);
 				break;
 			}
 		}
