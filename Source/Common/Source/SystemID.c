@@ -1,6 +1,7 @@
 #include <SystemID.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 {
@@ -207,3 +208,24 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 		p_SystemID->FirstReadSize );
 }
 
+void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_pSystemID,
+                               int p_StackAddress ) {
+    p_pSystemID->MasterStack = p_StackAddress;
+}
+
+int IPT_SetTitle( struct SYSTEM_ID *p_pSystemID, char *p_pTitle ) {
+
+    if (p_pTitle == NULL) {
+        fprintf (stderr,"Title not set\n");
+        return EXIT_FAILURE;
+    }
+
+    if (strlen(p_pTitle) >= TITLE_SIZE ) {
+        fprintf (stderr,"Title cannot be set, too long\n");
+        return EXIT_FAILURE;
+    }
+
+    strcpy( p_pSystemID->Title, p_pTitle);
+
+    return EXIT_SUCCESS;
+}

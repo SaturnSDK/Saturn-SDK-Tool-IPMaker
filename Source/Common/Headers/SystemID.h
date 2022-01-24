@@ -1,6 +1,8 @@
 #ifndef __IPMAKER_SYSTEMID_H__
 #define __IPMAKER_SYSTEMID_H__
 
+#define TITLE_SIZE 112
+
 struct SYSTEM_ID
 {
 	char	HardwareID[ 16 ];
@@ -12,7 +14,7 @@ struct SYSTEM_ID
 	char	CompatibleAreaSymbols[ 10 ];
 	char	Space[ 6 ];
 	char	Peripherals[ 16 ];
-	char	Title[ 112 ];
+	char	Title[ TITLE_SIZE ];
 	char	Reserved1[ 16 ];
 	int		IPSize;
 	int		Reserved2;
@@ -70,7 +72,7 @@ int IPT_SetTitle( struct SYSTEM_ID *p_pSystemID, char *p_pTitle );
 
 int IPT_SetIPSize( struct SYSTEM_ID *p_pSystemID, int p_Size );
 
-int IPT_SetMasterStackAddress( struct SYSTEM_ID *p_pSystemID,
+void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_pSystemID,
 	int p_StackAddress );
 
 int IPT_SetSlaveStackAddress( struct SYSTEM_ID p_SystemID,

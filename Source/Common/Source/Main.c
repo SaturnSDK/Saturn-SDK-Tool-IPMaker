@@ -28,12 +28,17 @@ int main( int argc, char *argv[] )
 
     unsigned char bVerbose = 0;
 
+    int startAddress = 0x0;
+    unsigned char bSetStartAddress = 0;
+
+    char* sTitle = NULL;
+
     size_t len = 0;
 
 	printf( "SEGA Saturn SDK | IP Maker\n" );
 
     // Read Arguments from cli
-    while((opt = getopt(argc, argv, ":i:o:vh")) != -1)
+    while((opt = getopt(argc, argv, ":i:o:s:vh")) != -1)
     {
         switch (opt) {
             case 'i':
@@ -47,6 +52,17 @@ int main( int argc, char *argv[] )
                 len = strlen(optarg);
                 sOutputFile = malloc(len+1);
                 strcpy(sOutputFile, optarg);
+                break;
+            case 's':
+                printf("Start address: %s\n", optarg);
+                startAddress = (int)strtol(optarg, NULL, 16);
+                bSetStartAddress = 1;
+                break;
+            case 't':
+                printf("Title: %s\n", optarg);
+                len = strlen(optarg);
+                sTitle = malloc(len+1);
+                strcpy(sTitle, optarg);
                 break;
             case 'v':
                 printf("Verbose\n");
@@ -78,14 +94,27 @@ int main( int argc, char *argv[] )
             fprintf (stderr,"Cannot open file : %s\n", sInputFile);
             exit(EXIT_FAILURE);
         }
+    } else {
+        // Set Default attributes
+        IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
+    }
+
+    //
+    // SETTERS !
+    //
+
+    if (bSetStartAddress) {
+        IPT_SetMasterStackAddress(&SystemID, startAddress);
+    }
+
+    if (sTitle) {
+        IPT_SetTitle(&SystemID, sTitle);
     }
 
     if (sOutputFile) {
         pSystemIDFile = fopen( sOutputFile, "w" );
 
         if (pSystemIDFile != NULL) {
-            // Set Default attributes
-            IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
 
             fwrite(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
             fclose(pSystemIDFile);
@@ -101,8 +130,6 @@ int main( int argc, char *argv[] )
         help();
         exit(EXIT_FAILURE);
     }
-
-
 
     if(bVerbose) {
         printf("System ID Information\n");
