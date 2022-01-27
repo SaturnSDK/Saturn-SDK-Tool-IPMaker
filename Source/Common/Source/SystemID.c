@@ -1,38 +1,50 @@
-#include <SystemID.h>
+#include "SystemID.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "Utils.h"
 
 int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 {
-	strncpy( p_pSystemID->HardwareID, "SEGA SEGASATURN ", 16 );
+    // Clean up the place before further actions
+    memset(p_pSystemID, 0, sizeof (struct SYSTEM_ID));
 
-	if( p_MakerID == MAKER_ID_SEGA )
-	{
-		strncpy( p_pSystemID->MakerID, "SEGA ENTERPRISES", 16 );
-		strncpy( p_pSystemID->ProductNumber, "GS-9099   ", 10 );
-	}
-	if( p_MakerID == MAKER_ID_3RDPARTY )
-	{
-		strncpy( p_pSystemID->MakerID, "SEGA TP KAISHA-A", 16 );
-		strncpy( p_pSystemID->ProductNumber, "T-99901G  ", 10 );
-	}
+    memcpy(p_pSystemID->HardwareID, sHardware_ID, HWID_SIZE);
 
-	strncpy( p_pSystemID->VersionNumber, "V0.000", 6 );
-	strncpy( p_pSystemID->ReleaseDate, "19941122", 8 );
-	strncpy( p_pSystemID->DeviceInformation, "CD-1/1  ", 8 );
-	strncpy( p_pSystemID->CompatibleAreaSymbols, "E         ", 10 );
-	strncpy( p_pSystemID->Space, "      ", 6 );
-	strncpy( p_pSystemID->Peripherals, "JAK             ", 16 );
-	memset( p_pSystemID->Title, ' ', sizeof( p_pSystemID->Title ) );
-	strncpy( p_pSystemID->Title, "GAME", 4 );
-	memset( p_pSystemID->Reserved1, ' ', sizeof( p_pSystemID->Reserved1 ) );
+    switch (p_MakerID) {
+        case MAKER_ID_SEGA:
+            memcpy(p_pSystemID->MakerID, sSEGA_MakerID, MAKERID_SIZE);
+            memcpy(p_pSystemID->ProductNumber, sSEGA_Product_Number, PRD_NB_SIZE);
+            break;
+        case MAKER_ID_3RDPARTY:
+            memcpy(p_pSystemID->MakerID, sThirdParty_MakerID, MAKERID_SIZE);
+            memcpy(p_pSystemID->ProductNumber, sThirdParty_Product_Number, PRD_NB_SIZE);
+            break;
+        default:
+            fprintf (stderr,"Wrong Maker ID\n");
+            return 1;
+    }
 
-	p_pSystemID->IPSize = 0x00001800;
-	p_pSystemID->MasterStack= 0;
-	p_pSystemID->SlaveStack = 0;
-	p_pSystemID->FirstReadAddress = 0x06004000;
-	p_pSystemID->FirstReadSize = 0;
+    memcpy(p_pSystemID->VersionNumber, sVersion_Number, VER_NB_SIZE);
+    memcpy(p_pSystemID->ReleaseDate, sReleaseDate, RDATE_SIZE);
+    memcpy( p_pSystemID->DeviceInformation, sDeviceInformation, DEV_INFO_SIZE );
+    memcpy( p_pSystemID->CompatibleAreaSymbols, sCompatibleAreaSymbols, AREACODE_SIZE );
+	memset( p_pSystemID->Space, ' ', SPACE_SIZE );
+    memcpy( p_pSystemID->Peripherals, sPeripherals, PERIPH_SIZE );
+
+    IPT_SetTitle(p_pSystemID, sDefaultGameTitle);
+
+	memset( p_pSystemID->Reserved1, ' ', RESERVED1_SIZE );
+
+    IPT_SetIPSize(p_pSystemID, 0x00001800);
+
+    IPT_SetMasterStackAddress(p_pSystemID, 0x00000000);
+    IPT_SetSlaveStackAddress(p_pSystemID, 0x00000000);
+
+    IPT_SetFirstReadAddress(p_pSystemID, 0x06004000);
+
+    IPT_SetFirstReadSize(p_pSystemID, 0);
+
 	memset( p_pSystemID->Reserved3, ' ', sizeof( p_pSystemID->Reserved3 ) );
 
 	return 0;
@@ -60,60 +72,39 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 
 	Area = *( p_SystemID->CompatibleAreaSymbols );
 	Counter = 0;
-	while( Area != ' ' && Counter < 10 )
-	{
-		if( Counter != 0 )
-		{
+	while( Area != ' ' && Counter < 10 ) {
+		if( Counter != 0 ) {
 			printf( "\n                              " );
 		}
 
-		switch( Area )
-		{
+		switch( Area ) {
 			case 'J':
-			{
 				printf( "Japan" );
 				break;
-			}
 			case 'T':
-			{
 				printf( "Asia NTSC" );
 				break;
-			}
 			case 'U':
-			{
 				printf( "North America" );
 				break;
-			}
 			case 'B':
-			{
 				printf( "South America NTSC" );
 				break;
-			}
 			case 'K':
-			{
 				printf( "Korea" );
 				break;
-			}
 			case 'A':
-			{
 				printf( "East Asia PAL" );
 				break;
-			}
 			case 'E':
-			{
 				printf( "Europe" );
 				break;
-			}
 			case 'L':
-			{
 				printf( "South America PAL" );
 				break;
-			}
 			default:
-			{
 				printf( "UNKNOWN" );
 				break;
-			}
 		}
 		++Counter;
 		Area = ( *( p_SystemID->CompatibleAreaSymbols + Counter ) );
@@ -125,50 +116,51 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 	Counter = 0;
 	Peripheral = *( p_SystemID->Peripherals );
 
-	while( Peripheral != ' ' && Counter < 10 )
-	{
-		if( Counter !=0 )
-		{
+	while( Peripheral != ' ' && Counter < 10 ) {
+		if( Counter !=0 ) {
 			printf( "\n                              " );
 		}
 
-		switch( Peripheral )
-		{
+		switch( Peripheral ) {
 			case 'J':
-			{
 				printf( "Control pad" );
 				break;
-			}
 			case 'A':
-			{
-				printf( "Analogue controller" );
+				printf( "Analog Controller (Mission Stick)" );
 				break;
-			}
 			case 'M':
-			{
 				printf( "Mouse" );
 				break;
-			}
 			case 'K':
-			{
 				printf( "Keyboard" );
 				break;
-			}
 			case 'S':
-			{
-				printf( "Steering controller" );
+				printf( "Steering controller (Arcade Racer" );
 				break;
-			}
 			case 'T':
-			{
-				printf( "Multitap" );
+				printf( "Multitap (6Player)" );
 				break;
-			}
+            case 'G':
+                printf( "Gun (Virtua Gun/Stunner)" );
+                break;
+            case 'C':
+                printf( "Saturn-to-Saturn cable" );
+                break;
+            case 'P':
+                printf( "MPEG" );
+                break;
+            case 'F':
+                printf( "FDD" );
+                break;
+            case 'D':
+                printf( "Modem" );
+                break;
+            case 'X':
+                printf( "XBAND" );
+                break;
 			default:
-			{
 				printf( "UNKNOWN : %c", Peripheral);
 				break;
-			}
 		}
 
 		++Counter;
@@ -177,55 +169,87 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 	printf( "\n" );
 
 	printf( "Title:                        %.122s\n", p_SystemID->Title );
-	printf( "IP Size:                      0x%08X\n", p_SystemID->IPSize );
+	printf( "IP Size:                      0x%08X\n", IPT_GetIPSize(p_SystemID) );
 
-	if( p_SystemID->MasterStack == 0 )
-	{
+	if( (MasterStack = IPT_GetMasterStackAddress(p_SystemID)) == 0 ) {
 		MasterStack = 0x06001000;
-	}
-	else
-	{
-		MasterStack = p_SystemID->MasterStack;
 	}
 
 	printf( "Master stack pointer address: 0x%08X\n", MasterStack );
 
-	if( p_SystemID->SlaveStack == 0 )
-	{
+	if( (SlaveStack = IPT_GetSlaveStackAddress(p_SystemID)) == 0 ) {
 		SlaveStack = 0x06000D00;
-	}
-	else
-	{
-		SlaveStack = p_SystemID->SlaveStack;
 	}
 
 	printf( "Slave stack pointer address:  0x%08X\n", SlaveStack );
 
 	printf( "1st read address:             0x%08X\n",
-		p_SystemID->FirstReadAddress );
+            IPT_GetFirstReadAddress(p_SystemID) );
 
 	printf( "1st read size:                0x%08X\n",
-		p_SystemID->FirstReadSize );
+            IPT_GetFirstReadSize(p_SystemID) );
 }
 
-void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_pSystemID,
-                               int p_StackAddress ) {
-    p_pSystemID->MasterStack = p_StackAddress;
-}
-
-int IPT_SetTitle( struct SYSTEM_ID *p_pSystemID, char *p_pTitle ) {
+int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle ) {
 
     if (p_pTitle == NULL) {
-        fprintf (stderr,"Title not set\n");
+        fprintf (stderr,"ERROR : Title not set\n");
         return EXIT_FAILURE;
     }
 
-    if (strlen(p_pTitle) >= TITLE_SIZE ) {
-        fprintf (stderr,"Title cannot be set, too long\n");
-        return EXIT_FAILURE;
+    size_t len = strlen(p_pTitle);
+
+    if (len > TITLE_SIZE ) {
+        fprintf (stderr,"WARNING : Title too long, it will be truncated\n");
     }
 
-    strcpy( p_pSystemID->Title, p_pTitle);
+    memset(p_SystemID->Title, ' ', TITLE_SIZE);
+
+    memcpy( p_SystemID->Title, p_pTitle, len);
 
     return EXIT_SUCCESS;
+}
+
+void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, int p_Size ) {
+    sprintf(p_SystemID->IPSize, "%d", p_Size);
+}
+
+int IPT_GetIPSize( struct SYSTEM_ID *p_SystemID) {
+    return atol(p_SystemID->IPSize);
+}
+
+void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_SystemID,
+                                int p_StackAddress ) {
+    sprintf(p_SystemID->MasterStack, "%d", p_StackAddress);
+}
+
+int IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID ) {
+    return atol(p_SystemID->MasterStack);
+}
+
+void IPT_SetSlaveStackAddress( struct SYSTEM_ID *p_SystemID,
+                              int p_StackAddress ) {
+    sprintf(p_SystemID->SlaveStack, "%d", p_StackAddress);
+}
+
+int IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
+    return atol(p_SystemID->SlaveStack);
+}
+
+void IPT_SetFirstReadAddress( struct SYSTEM_ID *p_SystemID,
+                             int p_FirstReadAddress ){
+    sprintf(p_SystemID->FirstReadAddress, "%d", p_FirstReadAddress);
+}
+
+int IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID ) {
+    return atol(p_SystemID->FirstReadAddress);
+}
+
+void IPT_SetFirstReadSize( struct SYSTEM_ID *p_SystemID,
+                          int p_FirstReadSize ) {
+    sprintf(p_SystemID->FirstReadSize, "%d", p_FirstReadSize);
+}
+
+int IPT_GetFirstReadSize( struct SYSTEM_ID *p_SystemID ) {
+    return atol(p_SystemID->FirstReadSize);
 }
