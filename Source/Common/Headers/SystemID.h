@@ -80,7 +80,7 @@ static const char sReleaseDate[]					= "19941122";
 
 static const char sDeviceInformation[]				= "CD-1/1  ";
 
-static const char sCompatibleAreaSymbols[]			= "E         ";
+static const char sCompatibleAreaSymbols[]			= "JTUBKAEL  ";
 static const char sPeripherals[]					= "JAK             ";
 
 static const char sDefaultGameTitle[]				= "GAME";

@@ -190,6 +190,16 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
             IPT_GetFirstReadSize(p_SystemID) );
 }
 
+/*
+ * The game title uses English alphanumeric characters only.
+ * A space can be inserted in the game title. “/-:” can be
+ * used as a delimiter between titles when more than one title is
+ * listed.
+ *
+ * When there are multiple titles:
+ * 1) “TITLE1/TITLE2/TITLE3∆∆∆∆”
+ * 2) “J:TITLE1∆∆U:TITLE2∆∆∆∆∆∆”
+ */
 int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle ) {
 
     if (p_pTitle == NULL) {
@@ -203,6 +213,8 @@ int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle ) {
         fprintf (stderr,"WARNING : Title too long, it will be truncated\n");
     }
 
+    // TODO : Add content validation ... not my war !
+
     memset(p_SystemID->Title, ' ', TITLE_SIZE);
 
     memcpy( p_SystemID->Title, p_pTitle, len);
@@ -210,7 +222,16 @@ int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle ) {
     return EXIT_SUCCESS;
 }
 
+/*
+ * Specifies the size (byte number) of the Initial Program (IP).
+ *
+ * AIP is placed immediately after the boot code, creating a
+ * single file, and the size of the file is specified. Parameters
+ * must be all long-word aligned (multiples of 4H).
+ * Range : 1000 ~ 8000H
+ */
 void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, int p_Size ) {
+    // TODO :  Add range validation and alignment
     sprintf(p_SystemID->IPSize, "%d", p_Size);
 }
 
