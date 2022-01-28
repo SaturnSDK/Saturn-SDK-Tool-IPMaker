@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "Utils.h"
 
 int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
@@ -230,47 +231,68 @@ int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle ) {
  * must be all long-word aligned (multiples of 4H).
  * Range : 1000 ~ 8000H
  */
-void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, int p_Size ) {
+void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, uint32_t p_Size ) {
     // TODO :  Add range validation and alignment
-    sprintf(p_SystemID->IPSize, "%d", p_Size);
+    memset(p_SystemID->IPSize, p_Size, sizeof (p_SystemID->IPSize));
 }
 
-int IPT_GetIPSize( struct SYSTEM_ID *p_SystemID) {
-    return atol(p_SystemID->IPSize);
+uint32_t IPT_GetIPSize( struct SYSTEM_ID *p_SystemID) {
+    return *(uint32_t *)p_SystemID->IPSize;
 }
 
 void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_SystemID,
-                                int p_StackAddress ) {
-    sprintf(p_SystemID->MasterStack, "%d", p_StackAddress);
+                                uint32_t p_StackAddress ) {
+    memset(p_SystemID->MasterStack, p_StackAddress, sizeof (p_SystemID->MasterStack));
 }
 
-int IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID ) {
-    return atol(p_SystemID->MasterStack);
+uint32_t IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID ) {
+    return *(uint32_t *)p_SystemID->MasterStack;
 }
 
 void IPT_SetSlaveStackAddress( struct SYSTEM_ID *p_SystemID,
-                              int p_StackAddress ) {
-    sprintf(p_SystemID->SlaveStack, "%d", p_StackAddress);
+                               uint32_t p_StackAddress ) {
+    memset(p_SystemID->SlaveStack, p_StackAddress, sizeof (p_SystemID->SlaveStack));
 }
 
-int IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
-    return atol(p_SystemID->SlaveStack);
+uint32_t IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
+    return *(uint32_t *)p_SystemID->SlaveStack;
 }
 
 void IPT_SetFirstReadAddress( struct SYSTEM_ID *p_SystemID,
-                             int p_FirstReadAddress ){
-    sprintf(p_SystemID->FirstReadAddress, "%d", p_FirstReadAddress);
+                              uint32_t p_FirstReadAddress ){
+    memset(p_SystemID->FirstReadAddress, p_FirstReadAddress, sizeof (p_SystemID->FirstReadAddress));
 }
 
-int IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID ) {
-    return atol(p_SystemID->FirstReadAddress);
+uint32_t IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID ) {
+    return *(uint32_t *)p_SystemID->FirstReadAddress;
 }
 
 void IPT_SetFirstReadSize( struct SYSTEM_ID *p_SystemID,
-                          int p_FirstReadSize ) {
-    sprintf(p_SystemID->FirstReadSize, "%d", p_FirstReadSize);
+                           uint32_t p_FirstReadSize ) {
+    memset(p_SystemID->FirstReadSize, p_FirstReadSize, sizeof (p_SystemID->FirstReadSize));
 }
 
-int IPT_GetFirstReadSize( struct SYSTEM_ID *p_SystemID ) {
-    return atol(p_SystemID->FirstReadSize);
+uint32_t IPT_GetFirstReadSize( struct SYSTEM_ID *p_SystemID ) {
+    return *(uint32_t *)p_SystemID->FirstReadSize;
+}
+
+int IPT_SetCompatibleAreas( struct SYSTEM_ID *p_SystemID, char * p_sAreas ) {
+    if (p_sAreas == NULL) {
+        fprintf (stderr,"ERROR : Area not set\n");
+        return EXIT_FAILURE;
+    }
+
+    size_t len = strlen(p_sAreas);
+
+    if (len > AREACODE_SIZE ) {
+        fprintf (stderr,"WARNING : Area too long, it will be truncated\n");
+    }
+
+    // TODO : Add content validation ... not my war !
+
+    memset(p_SystemID->CompatibleAreaSymbols, ' ', AREACODE_SIZE);
+
+    memcpy( p_SystemID->CompatibleAreaSymbols, p_sAreas, len);
+
+    return EXIT_SUCCESS;
 }

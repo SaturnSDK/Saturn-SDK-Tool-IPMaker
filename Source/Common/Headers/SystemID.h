@@ -6,6 +6,8 @@
 #ifndef __IPMAKER_SYSTEMID_H__
 #define __IPMAKER_SYSTEMID_H__
 
+#include <stdint.h>
+
 #define HWID_SIZE 		16
 #define MAKERID_SIZE 	16
 #define PRD_NB_SIZE 	10
@@ -107,36 +109,36 @@ int IPT_SetReleaseDate( struct SYSTEM_ID *p_SystemID, int p_Year, int p_Month,
 int IPT_SetDeviceInformation( struct SYSTEM_ID *p_SystemID, int p_CDNumber,
 	int p_CDCount );
 
-int IPT_SetCompatibleAreas( struct SYSTEM_ID *p_SystemID, int p_Areas );
+int IPT_SetCompatibleAreas( struct SYSTEM_ID *p_SystemID, char * p_sAreas );
 
 int IPT_SetCompatiblePeripherals( struct SYSTEM_ID *p_SystemID,
 	int p_Peripherals );
 
 int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle );
 
-void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, int p_Size );
+void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, uint32_t p_Size );
 
-int IPT_GetIPSize( struct SYSTEM_ID *p_SystemID);
+uint32_t IPT_GetIPSize( struct SYSTEM_ID *p_SystemID);
 
 void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_SystemID,
-	int p_StackAddress );
+                                uint32_t p_StackAddress );
 
-int IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID );
+uint32_t IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID );
 
 void IPT_SetSlaveStackAddress( struct SYSTEM_ID *p_SystemID,
-	int p_StackAddress );
+                               uint32_t p_StackAddress );
 
-int IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID );
+uint32_t IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID );
 
 void IPT_SetFirstReadAddress( struct SYSTEM_ID *p_SystemID,
-	int p_FirstReadAddress );
+                              uint32_t p_FirstReadAddress );
 
-int IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID );
+uint32_t IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID );
 
 void IPT_SetFirstReadSize( struct SYSTEM_ID *p_SystemID,
-                             int p_FirstReadSize );
+                           uint32_t p_FirstReadSize );
 
-int IPT_GetFirstReadSize( struct SYSTEM_ID *p_SystemID );
+uint32_t IPT_GetFirstReadSize( struct SYSTEM_ID *p_SystemID );
 
 void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID );
 

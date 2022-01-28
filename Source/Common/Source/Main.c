@@ -7,6 +7,8 @@
 #include <string.h>
 
 #include "SystemID.h"
+#include "SecurityCode.h"
+#include "AreaCodes.h"
 
 /* 2 defines */
 /* 3 external declarations */
@@ -32,6 +34,7 @@ int main( int argc, char *argv[] )
     unsigned char bSetStartAddress = 0;
 
     char* sTitle = NULL;
+    char* sZone = NULL;
 
     size_t len = 0;
 
@@ -64,6 +67,12 @@ int main( int argc, char *argv[] )
                 sTitle = malloc(len+1);
                 strcpy(sTitle, optarg);
                 break;
+            case 'z':
+                printf("Zone: %s\n", optarg);
+                len = strlen(optarg);
+                sZone = malloc(len+1);
+                strcpy(sZone, optarg);
+                break;
             case 'v':
                 printf("Verbose\n");
                 bVerbose = 1;
@@ -86,14 +95,13 @@ int main( int argc, char *argv[] )
     if (sInputFile != NULL) {
         pSystemIDFile = fopen( sInputFile, "r" );
 
-        if (pSystemIDFile != NULL) {
-            fread(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
-            fclose(pSystemIDFile);
-
-        } else {
+        if (pSystemIDFile == NULL) {
             fprintf (stderr,"Cannot open file : %s\n", sInputFile);
             exit(EXIT_FAILURE);
         }
+
+        fread(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
+        fclose(pSystemIDFile);
     } else {
         // Set Default attributes
         IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
@@ -111,18 +119,66 @@ int main( int argc, char *argv[] )
         IPT_SetTitle(&SystemID, sTitle);
     }
 
+    if (sZone) {
+        IPT_SetCompatibleAreas(&SystemID, sZone);
+    }
+
     if (sOutputFile) {
         pSystemIDFile = fopen( sOutputFile, "w" );
 
-        if (pSystemIDFile != NULL) {
-
-            fwrite(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
-            fclose(pSystemIDFile);
-
-        } else {
+        if (pSystemIDFile == NULL) {
             fprintf (stderr,"Cannot open file : %s\n", sOutputFile);
             exit(EXIT_FAILURE);
         }
+
+        // Write System ID
+        fwrite(&SystemID, sizeof(SystemID), 1, pSystemIDFile);
+
+        // Write Security Code
+        fwrite(sys_sec_obj, sys_sec_obj_len, 1, pSystemIDFile);
+
+        // Write Area Codes
+        char Area = *( SystemID.CompatibleAreaSymbols );
+        int Counter = 0;
+        while( Area != ' ' && Counter < 10 ) {
+            if( Counter != 0 ) {
+                printf( "\n                              " );
+            }
+
+            switch( Area ) {
+                case 'J':
+                    fwrite(sys_areb_obj, sys_areb_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'T':
+                    fwrite(sys_aret_obj, sys_aret_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'U':
+                    fwrite(sys_areu_obj, sys_areu_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'B':
+                    fwrite(sys_areb_obj, sys_areb_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'K':
+                    fwrite(sys_arek_obj, sys_arek_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'A':
+                    fwrite(sys_area_obj, sys_area_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'E':
+                    fwrite(sys_aree_obj, sys_aree_obj_len, 1, pSystemIDFile);
+                    break;
+                case 'L':
+                    fwrite(sys_arel_obj, sys_arel_obj_len, 1, pSystemIDFile);
+                    break;
+                default:
+                    printf( "UNKNOWN" );
+                    break;
+            }
+            ++Counter;
+            Area = ( *( SystemID.CompatibleAreaSymbols + Counter ) );
+        }
+
+        fclose(pSystemIDFile);
     }
 
     if (!sInputFile && !sOutputFile) {
@@ -136,6 +192,22 @@ int main( int argc, char *argv[] )
         printf("---------------------\n");
 
         IPT_PrintSystemID(&SystemID);
+    }
+
+    if(sInputFile) {
+        free(sInputFile);
+    }
+
+    if(sOutputFile) {
+        free(sOutputFile);
+    }
+
+    if(sTitle) {
+        free(sTitle);
+    }
+
+    if (sZone) {
+        free(sZone);
     }
 
 	return EXIT_SUCCESS;
