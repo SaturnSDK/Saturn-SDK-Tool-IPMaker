@@ -79,9 +79,9 @@ typedef enum {
 
 typedef enum
 {
-	MAKER_ID_SEGA = 0,
-	MAKER_ID_3RDPARTY = 1,
-	MAKER_ID_3RDPARTY_OWN = 2,
+	MAKER_ID_SEGA = '0',
+	MAKER_ID_3RDPARTY = '1',
+	MAKER_ID_3RDPARTY_OWN = '2'
 } MAKER_ID;
 
 static const char sHardware_ID[]					= "SEGA SEGASATURN ";

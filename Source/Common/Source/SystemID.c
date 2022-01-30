@@ -231,7 +231,7 @@ int IPT_SetTitle( struct SYSTEM_ID *p_SystemID, const char *p_pTitle ) {
  */
 void IPT_SetIPSize( struct SYSTEM_ID *p_SystemID, uint32_t p_Size ) {
     // TODO :  Add range validation and alignment
-    memset(p_SystemID->IPSize, p_Size, sizeof (p_SystemID->IPSize));
+    memcpy(p_SystemID->IPSize, &p_Size, sizeof (p_SystemID->IPSize));
 }
 
 uint32_t IPT_GetIPSize( struct SYSTEM_ID *p_SystemID) {
@@ -240,7 +240,7 @@ uint32_t IPT_GetIPSize( struct SYSTEM_ID *p_SystemID) {
 
 void IPT_SetMasterStackAddress( struct SYSTEM_ID *p_SystemID,
                                 uint32_t p_StackAddress ) {
-    memset(p_SystemID->MasterStack, p_StackAddress, sizeof (p_SystemID->MasterStack));
+    memcpy(p_SystemID->MasterStack, &p_StackAddress, sizeof (p_SystemID->MasterStack));
 }
 
 uint32_t IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID ) {
@@ -249,7 +249,7 @@ uint32_t IPT_GetMasterStackAddress( struct SYSTEM_ID *p_SystemID ) {
 
 void IPT_SetSlaveStackAddress( struct SYSTEM_ID *p_SystemID,
                                uint32_t p_StackAddress ) {
-    memset(p_SystemID->SlaveStack, p_StackAddress, sizeof (p_SystemID->SlaveStack));
+    memcpy(p_SystemID->SlaveStack, &p_StackAddress, sizeof (p_SystemID->SlaveStack));
 }
 
 uint32_t IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
@@ -258,7 +258,7 @@ uint32_t IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
 
 void IPT_SetFirstReadAddress( struct SYSTEM_ID *p_SystemID,
                               uint32_t p_FirstReadAddress ){
-    memset(p_SystemID->FirstReadAddress, p_FirstReadAddress, sizeof (p_SystemID->FirstReadAddress));
+    memcpy(p_SystemID->FirstReadAddress, &p_FirstReadAddress, sizeof (p_SystemID->FirstReadAddress));
 }
 
 uint32_t IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID ) {
@@ -267,7 +267,7 @@ uint32_t IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID ) {
 
 void IPT_SetFirstReadSize( struct SYSTEM_ID *p_SystemID,
                            uint32_t p_FirstReadSize ) {
-    memset(p_SystemID->FirstReadSize, p_FirstReadSize, sizeof (p_SystemID->FirstReadSize));
+    memcpy(p_SystemID->FirstReadSize, &p_FirstReadSize, sizeof (p_SystemID->FirstReadSize));
 }
 
 uint32_t IPT_GetFirstReadSize( struct SYSTEM_ID *p_SystemID ) {
