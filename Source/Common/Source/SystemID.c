@@ -21,30 +21,28 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
             memcpy(p_pSystemID->MakerID, sThirdParty_MakerID, MAKERID_SIZE);
             memcpy(p_pSystemID->ProductNumber, sThirdParty_Product_Number, PRD_NB_SIZE);
             break;
+        case MAKER_ID_3RDPARTY_OWN:
+            memcpy(p_pSystemID->MakerID, sThirdPartyOwn_MakerID, MAKERID_SIZE);
+            memcpy(p_pSystemID->ProductNumber, sThirdPartyOwn_Product_Number, PRD_NB_SIZE);
+            break;
         default:
             fprintf (stderr,"Wrong Maker ID\n");
             return 1;
     }
 
     memcpy(p_pSystemID->VersionNumber, sVersion_Number, VER_NB_SIZE);
-    memcpy(p_pSystemID->ReleaseDate, sReleaseDate, RDATE_SIZE);
+    memcpy(p_pSystemID->ReleaseDate, sInitialReleaseDate, RDATE_SIZE);
     memcpy( p_pSystemID->DeviceInformation, sDeviceInformation, DEV_INFO_SIZE );
     memcpy( p_pSystemID->CompatibleAreaSymbols, sCompatibleAreaSymbols, AREACODE_SIZE );
 	memset( p_pSystemID->Space, ' ', SPACE_SIZE );
-    memcpy( p_pSystemID->Peripherals, sPeripherals, PERIPH_SIZE );
-
+    memcpy( p_pSystemID->Peripherals, sDefaultPeripherals, PERIPH_SIZE );
     IPT_SetTitle(p_pSystemID, sDefaultGameTitle);
-
 	memset( p_pSystemID->Reserved1, ' ', RESERVED1_SIZE );
-
-    IPT_SetIPSize(p_pSystemID, 0x00001800);
-
-    IPT_SetMasterStackAddress(p_pSystemID, 0x00000000);
-    IPT_SetSlaveStackAddress(p_pSystemID, 0x00000000);
-
-    IPT_SetFirstReadAddress(p_pSystemID, 0x06004000);
-
-    IPT_SetFirstReadSize(p_pSystemID, 0);
+    IPT_SetIPSize(p_pSystemID, nDefaultIPSize);
+    IPT_SetMasterStackAddress(p_pSystemID, nDefaultMasterStackAddress);
+    IPT_SetSlaveStackAddress(p_pSystemID, nDefaultSlaveStackAddress);
+    IPT_SetFirstReadAddress(p_pSystemID, nDefaultFirstReadAddress);
+    IPT_SetFirstReadSize(p_pSystemID, nDefaultFirstReadSize);
 
 	memset( p_pSystemID->Reserved3, ' ', sizeof( p_pSystemID->Reserved3 ) );
 
@@ -53,8 +51,8 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 
 void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 {
-	char Area;
-	char Peripheral;
+	char cArea;
+	char cPeripheral;
 	int Counter;
 	int MasterStack;
 	int SlaveStack;
@@ -71,36 +69,36 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 		p_SystemID->DeviceInformation );
 	printf( "Compatible areas:             " );
 
-	Area = *( p_SystemID->CompatibleAreaSymbols );
+    cArea = *( p_SystemID->CompatibleAreaSymbols );
 	Counter = 0;
-	while( Area != ' ' && Counter < 10 ) {
+	while( cArea != ' ' && Counter < 10 ) {
 		if( Counter != 0 ) {
 			printf( "\n                              " );
 		}
 
-		switch( Area ) {
-			case 'J':
+		switch( (Area)cArea ) {
+			case eJapan:
 				printf( "Japan" );
 				break;
-			case 'T':
+			case eAsiaNTSC:
 				printf( "Asia NTSC" );
 				break;
-			case 'U':
+			case eNorthAmerica:
 				printf( "North America" );
 				break;
-			case 'B':
+			case eSouthAmericaNTSC:
 				printf( "South America NTSC" );
 				break;
-			case 'K':
+			case eKorea:
 				printf( "Korea" );
 				break;
-			case 'A':
+			case eEastAsiaPAL:
 				printf( "East Asia PAL" );
 				break;
-			case 'E':
+			case eEurope:
 				printf( "Europe" );
 				break;
-			case 'L':
+			case eSouthAmericaPAL:
 				printf( "South America PAL" );
 				break;
 			default:
@@ -108,64 +106,64 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 				break;
 		}
 		++Counter;
-		Area = ( *( p_SystemID->CompatibleAreaSymbols + Counter ) );
+        cArea = ( *( p_SystemID->CompatibleAreaSymbols + Counter ) );
 	}
 	printf( "\n" );
 
 	printf( "Peripherals:                  " );
 
 	Counter = 0;
-	Peripheral = *( p_SystemID->Peripherals );
+    cPeripheral = *( p_SystemID->Peripherals );
 
-	while( Peripheral != ' ' && Counter < 10 ) {
+	while( cPeripheral != ' ' && Counter < 10 ) {
 		if( Counter !=0 ) {
 			printf( "\n                              " );
 		}
 
-		switch( Peripheral ) {
-			case 'J':
+		switch( (Peripheral)cPeripheral ) {
+			case eControlPad:
 				printf( "Control pad" );
 				break;
-			case 'A':
+			case eAnalogController:
 				printf( "Analog Controller (Mission Stick)" );
 				break;
-			case 'M':
+			case eMouse:
 				printf( "Mouse" );
 				break;
-			case 'K':
+			case eKeyboard:
 				printf( "Keyboard" );
 				break;
-			case 'S':
+			case eSteeringController:
 				printf( "Steering controller (Arcade Racer" );
 				break;
-			case 'T':
+			case eMultitap:
 				printf( "Multitap (6Player)" );
 				break;
-            case 'G':
+            case eGun:
                 printf( "Gun (Virtua Gun/Stunner)" );
                 break;
-            case 'C':
+            case eSaturn2Saturn:
                 printf( "Saturn-to-Saturn cable" );
                 break;
-            case 'P':
+            case eMPEG:
                 printf( "MPEG" );
                 break;
-            case 'F':
+            case eFDD:
                 printf( "FDD" );
                 break;
-            case 'D':
+            case eModem:
                 printf( "Modem" );
                 break;
-            case 'X':
+            case eXBAND:
                 printf( "XBAND" );
                 break;
 			default:
-				printf( "UNKNOWN : %c", Peripheral);
+				printf( "UNKNOWN : %c", cPeripheral);
 				break;
 		}
 
 		++Counter;
-		Peripheral = ( *( p_SystemID->Peripherals + Counter ) );
+        cPeripheral = ( *( p_SystemID->Peripherals + Counter ) );
 	}
 	printf( "\n" );
 

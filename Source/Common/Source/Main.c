@@ -30,7 +30,7 @@ int main( int argc, char *argv[] )
 
     unsigned char bVerbose = 0;
 
-    int startAddress = 0x0;
+    uint32_t startAddress = 0x0;
     unsigned char bSetStartAddress = 0;
 
     char* sTitle = NULL;
@@ -38,10 +38,12 @@ int main( int argc, char *argv[] )
 
     size_t len = 0;
 
+    MAKER_ID type = MAKER_ID_SEGA;
+
 	printf( "SEGA Saturn SDK | IP Maker\n" );
 
     // Read Arguments from cli
-    while((opt = getopt(argc, argv, ":i:o:s:vh")) != -1)
+    while((opt = getopt(argc, argv, ":i:o:s:t:z:p:vh")) != -1)
     {
         switch (opt) {
             case 'i':
@@ -58,7 +60,7 @@ int main( int argc, char *argv[] )
                 break;
             case 's':
                 printf("Start address: %s\n", optarg);
-                startAddress = (int)strtol(optarg, NULL, 16);
+                startAddress = (uint32_t)strtoll(optarg, NULL, 16);
                 bSetStartAddress = 1;
                 break;
             case 't':
@@ -72,6 +74,10 @@ int main( int argc, char *argv[] )
                 len = strlen(optarg);
                 sZone = malloc(len+1);
                 strcpy(sZone, optarg);
+                break;
+            case 'p':
+                printf("Profile: %s\n", optarg);
+                type = (MAKER_ID)optarg[0];
                 break;
             case 'v':
                 printf("Verbose\n");
@@ -88,7 +94,6 @@ int main( int argc, char *argv[] )
             default:
                 fprintf (stderr, "unknown option: %c\n", optopt);
                 exit(EXIT_FAILURE);
-                break;
         }
     }
 
@@ -104,7 +109,7 @@ int main( int argc, char *argv[] )
         fclose(pSystemIDFile);
     } else {
         // Set Default attributes
-        IPT_DefaultSystemID( &SystemID, MAKER_ID_SEGA );
+        IPT_DefaultSystemID( &SystemID, type );
     }
 
     //
@@ -138,44 +143,44 @@ int main( int argc, char *argv[] )
         fwrite(sys_sec_obj, sys_sec_obj_len, 1, pSystemIDFile);
 
         // Write Area Codes
-        char Area = *( SystemID.CompatibleAreaSymbols );
+        char cArea = *( SystemID.CompatibleAreaSymbols );
         int Counter = 0;
-        while( Area != ' ' && Counter < 10 ) {
+        while( cArea != ' ' && Counter < 10 ) {
             if( Counter != 0 ) {
                 printf( "\n                              " );
             }
 
-            switch( Area ) {
-                case 'J':
+            switch( (Area)cArea ) {
+                case eJapan:
                     fwrite(sys_areb_obj, sys_areb_obj_len, 1, pSystemIDFile);
                     break;
-                case 'T':
+                case eAsiaNTSC:
                     fwrite(sys_aret_obj, sys_aret_obj_len, 1, pSystemIDFile);
                     break;
-                case 'U':
+                case eNorthAmerica:
                     fwrite(sys_areu_obj, sys_areu_obj_len, 1, pSystemIDFile);
                     break;
-                case 'B':
+                case eSouthAmericaNTSC:
                     fwrite(sys_areb_obj, sys_areb_obj_len, 1, pSystemIDFile);
                     break;
-                case 'K':
+                case eKorea:
                     fwrite(sys_arek_obj, sys_arek_obj_len, 1, pSystemIDFile);
                     break;
-                case 'A':
+                case eEastAsiaPAL:
                     fwrite(sys_area_obj, sys_area_obj_len, 1, pSystemIDFile);
                     break;
-                case 'E':
+                case eEurope:
                     fwrite(sys_aree_obj, sys_aree_obj_len, 1, pSystemIDFile);
                     break;
-                case 'L':
+                case eSouthAmericaPAL:
                     fwrite(sys_arel_obj, sys_arel_obj_len, 1, pSystemIDFile);
                     break;
                 default:
-                    printf( "UNKNOWN" );
+                    printf( "UNKNOWN AREA : %c", cArea);
                     break;
             }
             ++Counter;
-            Area = ( *( SystemID.CompatibleAreaSymbols + Counter ) );
+            cArea = ( *( SystemID.CompatibleAreaSymbols + Counter ) );
         }
 
         fclose(pSystemIDFile);

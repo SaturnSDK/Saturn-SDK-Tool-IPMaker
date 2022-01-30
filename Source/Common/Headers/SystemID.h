@@ -51,47 +51,70 @@ struct SYSTEM_ID
 	char	Reserved3[ RESERVED3_SIZE ];
 } __attribute__((packed));
 
-static const int AREA_JAPAN					= 0x00000001;
-static const int AREA_EUROPE				= 0x00000002;
-static const int AREA_NORTH_AMERICA			= 0x00000004;
-static const int AREA_ASIA_NTSC				= 0x00000008;
-static const int AREA_SOUTH_AMERICA_PAL		= 0x00000010;
-static const int AREA_EAST_ASIA_PAL			= 0x00000020;
-static const int AREA_KOREA					= 0x00000040;
-static const int AREA_SOUTH_AMERICA_NTSC	= 0x00000080;
+typedef enum {
+	eJapan = 'J',
+	eAsiaNTSC = 'T',
+	eNorthAmerica = 'U',
+	eSouthAmericaNTSC = 'B',
+	eKorea = 'K',
+	eEastAsiaPAL = 'A',
+	eEurope = 'E',
+	eSouthAmericaPAL = 'L'
+} Area;
 
-static const int PERIPHERAL_CONTROL_PAD				= 0x00000001;
-static const int PERIPHERAL_ANALOGUE_CONTROLLER		= 0x00000002;
-static const int PERIPHERAL_MOUSE					= 0x00000004;
-static const int PERIPHERAL_KEYBOARD				= 0x00000008;
-static const int PERIPHERAL_STEERING_CONTROLLER		= 0x00000010;
-static const int PERIPHERAL_MULTITAP				= 0x00000020;
+typedef enum {
+	eControlPad = 'J',
+	eAnalogController = 'A',
+	eMouse = 'M',
+	eKeyboard = 'K',
+	eSteeringController = 'S',
+	eMultitap = 'T',
+	eGun = 'G',
+	eSaturn2Saturn = 'C',
+	eMPEG = 'P',
+	eFDD = 'F',
+	eModem = 'D',
+	eXBAND = 'X'
+} Peripheral;
+
+typedef enum
+{
+	MAKER_ID_SEGA = 0,
+	MAKER_ID_3RDPARTY = 1,
+	MAKER_ID_3RDPARTY_OWN = 2,
+} MAKER_ID;
 
 static const char sHardware_ID[]					= "SEGA SEGASATURN ";
 
 static const char sSEGA_MakerID[]					= "SEGA ENTERPRISES";
 static const char sThirdParty_MakerID[]				= "SEGA TP KAISHA-A";
 static const char sThirdParty_MakerID_2[]			= "SEGA TP T-999   ";
+static const char sThirdPartyOwn_MakerID[]			= "SEGA TP WILLLLLL";
 
 static const char sSEGA_Product_Number[]			= "GS-9099   ";
 static const char sThirdParty_Product_Number[]		= "T-99901G  ";
+static const char sThirdPartyOwn_Product_Number[]	= "T-555GN666";
 
 static const char sVersion_Number[]					= "V0.000";
 
-static const char sReleaseDate[]					= "19941122";
+static const char sInitialReleaseDate[]				= "19941122";
 
 static const char sDeviceInformation[]				= "CD-1/1  ";
 
-static const char sCompatibleAreaSymbols[]			= "JTUBKAEL  ";
-static const char sPeripherals[]					= "JAK             ";
+static const char sFullCompatibleAreaSymbols[]		= "JTUBKAEL  ";
+static const char sMainCompatibleAreaSymbols[]		= "JUE       ";
+static const char sCompatibleAreaSymbols[]			= "J         ";
+
+static const char sFullPeripherals[]				= "JAMKSTGCPMFDX   ";
+static const char sDefaultPeripherals[]				= "JAK             ";
 
 static const char sDefaultGameTitle[]				= "GAME";
 
-typedef enum
-{
-	MAKER_ID_SEGA,
-	MAKER_ID_3RDPARTY
-} MAKER_ID;
+static const uint32_t nDefaultIPSize				= 0x00001800;
+static const uint32_t nDefaultMasterStackAddress	= 0x00000000;
+static const uint32_t nDefaultSlaveStackAddress		= 0x00000000;
+static const uint32_t nDefaultFirstReadAddress		= 0x06004000;
+static const uint32_t nDefaultFirstReadSize			= 0;
 
 int IPT_DefaultSystemID( struct SYSTEM_ID *p_SystemID, MAKER_ID p_MakerID );
 
