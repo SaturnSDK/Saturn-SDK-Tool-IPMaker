@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "Utils.h"
 
@@ -16,14 +17,24 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
         case MAKER_ID_SEGA:
             memcpy(p_pSystemID->MakerID, sSEGA_MakerID, MAKERID_SIZE);
             memcpy(p_pSystemID->ProductNumber, sSEGA_Product_Number, PRD_NB_SIZE);
+            memcpy(p_pSystemID->ReleaseDate, sInitialReleaseDate, RDATE_SIZE);
             break;
         case MAKER_ID_3RDPARTY:
             memcpy(p_pSystemID->MakerID, sThirdParty_MakerID, MAKERID_SIZE);
             memcpy(p_pSystemID->ProductNumber, sThirdParty_Product_Number, PRD_NB_SIZE);
+            memcpy(p_pSystemID->ReleaseDate, sInitialReleaseDate, RDATE_SIZE);
             break;
-        case MAKER_ID_3RDPARTY_OWN:
-            memcpy(p_pSystemID->MakerID, sThirdPartyOwn_MakerID, MAKERID_SIZE);
-            memcpy(p_pSystemID->ProductNumber, sThirdPartyOwn_Product_Number, PRD_NB_SIZE);
+        case MAKER_ID_3RDPARTY_OWN: {
+                time_t now;
+                time(&now);
+                struct tm *local = localtime(&now);
+                memcpy(p_pSystemID->MakerID, sThirdPartyOwn_MakerID, MAKERID_SIZE);
+                memcpy(p_pSystemID->ProductNumber, sThirdPartyOwn_Product_Number, PRD_NB_SIZE);
+                IPT_SetReleaseDate(p_pSystemID,
+                                   local->tm_year + 1900,
+                                   local->tm_mon + 1,
+                                   local->tm_mday);
+            }
             break;
         default:
             fprintf (stderr,"Wrong Maker ID\n");
@@ -31,7 +42,7 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
     }
 
     memcpy(p_pSystemID->VersionNumber, sVersion_Number, VER_NB_SIZE);
-    memcpy(p_pSystemID->ReleaseDate, sInitialReleaseDate, RDATE_SIZE);
+
     memcpy( p_pSystemID->DeviceInformation, sDeviceInformation, DEV_INFO_SIZE );
     memcpy( p_pSystemID->CompatibleAreaSymbols, sCompatibleAreaSymbols, AREACODE_SIZE );
 	memset( p_pSystemID->Space, ' ', SPACE_SIZE );
@@ -189,6 +200,13 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
             IPT_GetFirstReadSize(p_SystemID) );
 }
 
+
+void IPT_SetReleaseDate( struct SYSTEM_ID *p_SystemID, int p_Year, int p_Month,
+                         int p_Day ) {
+    memset(p_SystemID->ReleaseDate, ' ', RDATE_SIZE);
+    sprintf(p_SystemID->ReleaseDate, "%d%02d%02d", p_Year, p_Month, p_Day);
+}
+
 /*
  * The game title uses English alphanumeric characters only.
  * A space can be inserted in the game title. “/-:” can be
@@ -257,7 +275,7 @@ uint32_t IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
 }
 
 void IPT_SetFirstReadAddress( struct SYSTEM_ID *p_SystemID,
-                              uint32_t p_FirstReadAddress ){
+                              uint32_t p_FirstReadAddress ) {
     memcpy(p_SystemID->FirstReadAddress, &p_FirstReadAddress, sizeof (p_SystemID->FirstReadAddress));
 }
 

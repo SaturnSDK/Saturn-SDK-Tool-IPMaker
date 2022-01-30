@@ -106,7 +106,7 @@ static const char sMainCompatibleAreaSymbols[]		= "JUE       ";
 static const char sCompatibleAreaSymbols[]			= "J         ";
 
 static const char sFullPeripherals[]				= "JAMKSTGCPMFDX   ";
-static const char sDefaultPeripherals[]				= "JAK             ";
+static const char sDefaultPeripherals[]				= "JA              ";
 
 static const char sDefaultGameTitle[]				= "GAME";
 
@@ -126,8 +126,8 @@ int IPT_SetProductNumber( struct SYSTEM_ID *p_SystemID,
 int IPT_SetVersionNumber( struct SYSTEM_ID *p_SystemID, int p_Major,
 	int p_Minor );
 
-int IPT_SetReleaseDate( struct SYSTEM_ID *p_SystemID, int p_Year, int p_Month,
-	int p_Date );
+void IPT_SetReleaseDate( struct SYSTEM_ID *p_SystemID, int p_Year, int p_Month,
+	int p_Day );
 
 int IPT_SetDeviceInformation( struct SYSTEM_ID *p_SystemID, int p_CDNumber,
 	int p_CDCount );
