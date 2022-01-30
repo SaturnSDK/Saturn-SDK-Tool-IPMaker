@@ -8,3 +8,6 @@ A tool to generate IP files via the command line
 | Area Code Group : 20H - 100H Bytes |
 
 
+Usage : 
+
+<cmd> -v -o ./IP.BIN -s 0x06004000 -t Test! -p 2

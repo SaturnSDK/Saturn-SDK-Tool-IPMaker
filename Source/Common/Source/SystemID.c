@@ -48,14 +48,14 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 	memset( p_pSystemID->Space, ' ', SPACE_SIZE );
     memcpy( p_pSystemID->Peripherals, sDefaultPeripherals, PERIPH_SIZE );
     IPT_SetTitle(p_pSystemID, sDefaultGameTitle);
-	memset( p_pSystemID->Reserved1, ' ', RESERVED1_SIZE );
+	memset( p_pSystemID->Reserved1, 0, RESERVED1_SIZE );
     IPT_SetIPSize(p_pSystemID, nDefaultIPSize);
     IPT_SetMasterStackAddress(p_pSystemID, nDefaultMasterStackAddress);
     IPT_SetSlaveStackAddress(p_pSystemID, nDefaultSlaveStackAddress);
     IPT_SetFirstReadAddress(p_pSystemID, nDefaultFirstReadAddress);
     IPT_SetFirstReadSize(p_pSystemID, nDefaultFirstReadSize);
 
-	memset( p_pSystemID->Reserved3, ' ', sizeof( p_pSystemID->Reserved3 ) );
+	memset( p_pSystemID->Reserved3, 0, sizeof( p_pSystemID->Reserved3 ) );
 
 	return 0;
 }
