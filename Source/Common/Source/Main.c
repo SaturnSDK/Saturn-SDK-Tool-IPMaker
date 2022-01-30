@@ -152,7 +152,7 @@ int main( int argc, char *argv[] )
 
             switch( (Area)cArea ) {
                 case eJapan:
-                    fwrite(sys_areb_obj, sys_areb_obj_len, 1, pSystemIDFile);
+                    fwrite(sys_arej_obj, sys_arej_obj_len, 1, pSystemIDFile);
                     break;
                 case eAsiaNTSC:
                     fwrite(sys_aret_obj, sys_aret_obj_len, 1, pSystemIDFile);
