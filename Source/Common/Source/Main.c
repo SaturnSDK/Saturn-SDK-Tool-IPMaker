@@ -10,11 +10,7 @@
 #include "SecurityCode.h"
 #include "AreaCodes.h"
 
-/* 2 defines */
-/* 3 external declarations */
-/* 4 typedefs */
-/* 5 global variable declarations */
-/* 6 function prototypes */
+static char sEmptyBuffer[0x20] = { 0 };
 
 void help();
 
@@ -181,6 +177,17 @@ int main( int argc, char *argv[] )
             }
             ++Counter;
             cArea = ( *( SystemID.CompatibleAreaSymbols + Counter ) );
+        }
+
+        if (Counter == 0) {
+            fprintf (stderr,"No compatible area specified");
+            exit(EXIT_FAILURE);
+        } else {
+            // pad the end of the file
+            memset(sEmptyBuffer, 0, 0x20);
+            for (int i = 0; i < 16 - Counter; i++) {
+                fwrite(sEmptyBuffer, 0x20, 1, pSystemIDFile);
+            }
         }
 
         fclose(pSystemIDFile);
