@@ -95,7 +95,7 @@ static const char sSEGA_Product_Number[]			= "GS-9099   ";
 static const char sThirdParty_Product_Number[]		= "T-99901G  ";
 static const char sThirdPartyOwn_Product_Number[]	= "T-555GN666";
 
-static const char sVersion_Number[]					= "V0.000";
+static const char sVersion_Number[]					= "V1.000";
 
 static const char sInitialReleaseDate[]				= "19941122";
 
@@ -110,9 +110,9 @@ static const char sDefaultPeripherals[]				= "JA              ";
 
 static const char sDefaultGameTitle[]				= "GAME";
 
-static const uint32_t nDefaultIPSize				= 0x00001800;
-static const uint32_t nDefaultMasterStackAddress	= 0x00000000;
-static const uint32_t nDefaultSlaveStackAddress		= 0x00000000;
+static const uint32_t nDefaultIPSize				= 0x00180000;
+static const uint32_t nDefaultMasterStackAddress	= 0;
+static const uint32_t nDefaultSlaveStackAddress		= 0;
 static const uint32_t nDefaultFirstReadAddress		= 0x06004000;
 static const uint32_t nDefaultFirstReadSize			= 0;
 

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <byteswap.h>
 
 #include "Utils.h"
 
@@ -276,11 +277,13 @@ uint32_t IPT_GetSlaveStackAddress( struct SYSTEM_ID *p_SystemID ) {
 
 void IPT_SetFirstReadAddress( struct SYSTEM_ID *p_SystemID,
                               uint32_t p_FirstReadAddress ) {
-    memcpy(p_SystemID->FirstReadAddress, &p_FirstReadAddress, sizeof (p_SystemID->FirstReadAddress));
+    uint32_t tmp = __bswap_32(p_FirstReadAddress);
+    memcpy(p_SystemID->FirstReadAddress, &tmp, sizeof (p_SystemID->FirstReadAddress));
 }
 
 uint32_t IPT_GetFirstReadAddress( struct SYSTEM_ID *p_SystemID ) {
-    return *(uint32_t *)p_SystemID->FirstReadAddress;
+    uint32_t tmp = __bswap_32(*(uint32_t *)p_SystemID->FirstReadAddress);
+    return tmp;
 }
 
 void IPT_SetFirstReadSize( struct SYSTEM_ID *p_SystemID,
