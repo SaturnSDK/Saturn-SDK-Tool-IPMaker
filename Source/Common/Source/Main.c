@@ -9,6 +9,7 @@
 #include "SystemID.h"
 #include "SecurityCode.h"
 #include "AreaCodes.h"
+#include "SystemInit.h"
 
 static char sEmptyBuffer[0x20] = { 0 };
 
@@ -182,13 +183,17 @@ int main( int argc, char *argv[] )
         if (Counter == 0) {
             fprintf (stderr,"No compatible area specified");
             exit(EXIT_FAILURE);
-        } else {
+        }
+        /*else {
             // pad the end of the file
             memset(sEmptyBuffer, 0, 0x20);
             for (int i = 0; i < 16 - Counter; i++) {
                 fwrite(sEmptyBuffer, 0x20, 1, pSystemIDFile);
             }
-        }
+        }*/
+
+        // Write AIP
+        fwrite(sys_init_obj, sys_init_obj_len, 1, pSystemIDFile);
 
         fclose(pSystemIDFile);
     }
