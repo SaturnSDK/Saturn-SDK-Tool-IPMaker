@@ -9,7 +9,7 @@ project( Saturn-SDK-Tool-IPMaker VERSION 1.0
 set(SOURCES
         Source/Common/Source/Main.c
         Source/Common/Source/SystemID.c
-        Source/Common/Headers/Utils.h Source/Common/Headers/SecurityCode.h Source/Common/Headers/AreaCodes.h Source/Common/Headers/SystemInit.h)
+        Source/Common/Headers/Utils.h Source/Common/Headers/SecurityCode.h Source/Common/Headers/AreaCodes.h Source/Common/Headers/SystemInit.h Source/Common/Headers/SmpSys.h)
 
 add_executable( IPMaker ${SOURCES} )
 
