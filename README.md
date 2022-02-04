@@ -11,17 +11,17 @@ tool to generate IP files via the command line
 |            SmpSys : XXX            |
 
 
-##Usage : 
+## Usage : 
 
 < cmd > -v -o ./IP.BIN -s 0x06004000 -t Test -p 2
 
-##Profiles :
+## Profiles :
 
 0 : SEGA
 1 : 3rd party
 1 : Custom 3rd Party
 
-##TODO :
+## TODO :
 
 * Add missing Setters,
 * Add help for command line arguments,
