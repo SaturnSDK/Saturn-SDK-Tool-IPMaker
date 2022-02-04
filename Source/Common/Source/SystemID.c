@@ -5,8 +5,6 @@
 #include <time.h>
 #include <byteswap.h>
 
-#include "Utils.h"
-
 int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 {
     // Clean up the place before further actions

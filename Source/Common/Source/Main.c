@@ -12,8 +12,6 @@
 #include "SystemInit.h"
 #include "SmpSys.h"
 
-static char sEmptyBuffer[0x20] = { 0 };
-
 void help();
 
 int main( int argc, char *argv[] )
@@ -87,10 +85,12 @@ int main( int argc, char *argv[] )
                 break;
             case 'h' :
                 help();
+                exit(EXIT_SUCCESS);
                 break;
             case '?':
             default:
                 fprintf (stderr, "unknown option: %c\n", optopt);
+                help();
                 exit(EXIT_FAILURE);
         }
     }
@@ -190,7 +190,7 @@ int main( int argc, char *argv[] )
         fwrite(sys_init_obj, sys_init_obj_len, 1, pSystemIDFile);
 
         // Write SmpSys
-       // fwrite(smpsys_text, smpsys_text_len, 1, pSystemIDFile);
+       // fwrite(smpsys_text, smpsys_text_len, 1, pSystemIDFile);   // TBD
         fwrite(test_text, test_text_len, 1, pSystemIDFile);
 
         fclose(pSystemIDFile);
