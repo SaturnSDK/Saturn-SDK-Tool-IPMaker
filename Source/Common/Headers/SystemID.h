@@ -103,7 +103,7 @@ static const char sDeviceInformation[]				= "CD-1/1  ";
 
 static const char sFullCompatibleAreaSymbols[]		= "JTUBKAEL  ";
 static const char sMainCompatibleAreaSymbols[]		= "JUE       ";
-static const char sCompatibleAreaSymbols[]			= "J         ";
+static const char sCompatibleAreaSymbols[]			= "JTUE      ";
 
 static const char sFullPeripherals[]				= "JAMKSTGCPMFDX   ";
 static const char sDefaultPeripherals[]				= "JA              ";
