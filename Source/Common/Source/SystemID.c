@@ -44,10 +44,10 @@ int IPT_DefaultSystemID( struct SYSTEM_ID *p_pSystemID, MAKER_ID p_MakerID )
 
     memcpy( p_pSystemID->DeviceInformation, sDeviceInformation, DEV_INFO_SIZE );
     memcpy( p_pSystemID->CompatibleAreaSymbols, sCompatibleAreaSymbols, AREACODE_SIZE );
-	memset( p_pSystemID->Space, ' ', SPACE_SIZE );
+	  memset( p_pSystemID->Space, ' ', SPACE_SIZE );
     memcpy( p_pSystemID->Peripherals, sDefaultPeripherals, PERIPH_SIZE );
     IPT_SetTitle(p_pSystemID, sDefaultGameTitle);
-	memset( p_pSystemID->Reserved1, 0, RESERVED1_SIZE );
+	  memset( p_pSystemID->Reserved1, 0, RESERVED1_SIZE );
     IPT_SetIPSize(p_pSystemID, nDefaultIPSize);
     IPT_SetMasterStackAddress(p_pSystemID, nDefaultMasterStackAddress);
     IPT_SetSlaveStackAddress(p_pSystemID, nDefaultSlaveStackAddress);
@@ -79,8 +79,9 @@ void IPT_PrintSystemID( struct SYSTEM_ID *p_SystemID )
 		p_SystemID->DeviceInformation );
 	printf( "Compatible areas:             " );
 
-    cArea = *( p_SystemID->CompatibleAreaSymbols );
+  cArea = *( p_SystemID->CompatibleAreaSymbols );
 	Counter = 0;
+  
 	while( cArea != ' ' && Counter < 10 ) {
 		if( Counter != 0 ) {
 			printf( "\n                              " );
