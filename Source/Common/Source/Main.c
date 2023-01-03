@@ -161,7 +161,7 @@ int main( int argc, char *argv[] )
     char cArea = *( SystemID.CompatibleAreaSymbols );
     int Counter = 0;
     while( cArea != ' ' && Counter < 10 ) {
-      if( Counter != 0 ) {
+      if( Counter != 0 && bVerbose) {
         printf( "\n                              " );
       }
 
